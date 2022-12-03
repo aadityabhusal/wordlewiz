@@ -13,3 +13,11 @@ An approach to solving wordle puzzles
 - [Letter frequency and Wordle](https://recoveringphysicist.com/39/letter-frequency-and-wordle)
 - [5 lettered words dataset](https://www-cs-faculty.stanford.edu/~knuth/sgb.html)
 - [Most used letters morse code](https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html)
+
+# Findings
+
+2 Words - (aurei/irate), clods & adieu, snort
+
+3 Words - atone, child, rumps & ariel, dunts, chomp (opt. fourth gawky/beigy)
+
+4 Words - trial, befog, chump, wynds
