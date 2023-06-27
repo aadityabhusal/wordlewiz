@@ -1,6 +1,8 @@
 # wordle
 An approach to solving wordle puzzles
 
+# This project is being modified into a wordle solver.
+
 # Tasks
 - Get the list of most used letters in 5 lettered words
 - Optimize the function from O(n^2) to O(n*log(n)) or if possible O(n)
