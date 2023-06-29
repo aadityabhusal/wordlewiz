@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+
 const [rows, cols] = [6, 5];
+const colors = ["white", "#c9b458", "#6aaa64"];
 
 export default function App() {
   const [matrix, setMatrix] = useState(
@@ -7,7 +9,6 @@ export default function App() {
       [...Array(cols)].map(() => ({ value: "", state: 0 }))
     )
   );
-
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const currentRef = useRef<HTMLInputElement>(null);
 
@@ -17,7 +18,7 @@ export default function App() {
         if (rowIndex !== rowIdx) return row;
         return row.map((col, colIdx) => {
           if (colIndex !== colIdx) return col;
-          return { value: value.slice(col.value.length), state: col.state };
+          return { value: value.slice(0, 1), state: col.state };
         });
       });
     });
@@ -34,6 +35,18 @@ export default function App() {
     }
   }
 
+  function handleClick(rowIndex: number, colIndex: number) {
+    setMatrix((prev) => {
+      return prev.map((row, rowIdx) => {
+        if (rowIndex !== rowIdx) return row;
+        return row.map((col, colIdx) => {
+          if (colIndex !== colIdx) return col;
+          return { value: col.value, state: (col.state + 1) % 3 };
+        });
+      });
+    });
+  }
+
   useEffect(() => {
     currentRef.current?.focus();
   }, [currentIndex]);
@@ -45,10 +58,10 @@ export default function App() {
         <div key={rowIndex}>
           {row.map((col, colIndex) => (
             <input
-              style={{ width: "20px" }}
               key={colIndex}
               disabled={currentIndex[0] !== rowIndex}
               value={col.value.toUpperCase()}
+              onClick={() => col.value && handleClick(rowIndex, colIndex)}
               onChange={(e) => handleChange(e.target.value, rowIndex, colIndex)}
               onKeyDown={(e) => handleKeyDown(e.key, rowIndex, colIndex)}
               ref={
@@ -56,6 +69,11 @@ export default function App() {
                   ? currentRef
                   : null
               }
+              style={{
+                width: "20px",
+                background: colors[col.state],
+                cursor: col.value ? "pointer" : "initial",
+              }}
             />
           ))}
         </div>
