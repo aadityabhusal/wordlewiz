@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useRef, useState } from "react";
+const [rows, cols] = [6, 5];
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [matrix, setMatrix] = useState(
+    [...Array(rows)].map(() =>
+      [...Array(cols)].map(() => ({ value: "", state: 0 }))
+    )
+  );
+
+  const [currentIndex, setCurrentIndex] = useState([0, 0]);
+  const currentRef = useRef<HTMLInputElement>(null);
+
+  function handleChange(value: string, rowIndex: number, colIndex: number) {
+    setMatrix((prev) => {
+      return prev.map((row, rowIdx) => {
+        if (rowIndex !== rowIdx) return row;
+        return row.map((col, colIdx) => {
+          if (colIndex !== colIdx) return col;
+          return { value: value.slice(col.value.length), state: col.state };
+        });
+      });
+    });
+    setCurrentIndex(() => [rowIndex, colIndex + (value ? 1 : 0)]);
+  }
+
+  function handleKeyDown(key: string, rowIndex: number, colIndex: number) {
+    const hasValue = matrix[rowIndex][colIndex].value;
+    if (key === "Enter" && hasValue && colIndex === cols - 1) {
+      setCurrentIndex(() => [rowIndex + 1, 0]);
+    }
+    if (key === "Backspace" && !hasValue) {
+      setCurrentIndex(() => [rowIndex, colIndex - 1]);
+    }
+  }
+
+  useEffect(() => {
+    currentRef.current?.focus();
+  }, [currentIndex]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <h1>Wordle</h1>
+      {matrix.map((row, rowIndex) => (
+        <div key={rowIndex}>
+          {row.map((col, colIndex) => (
+            <input
+              style={{ width: "20px" }}
+              key={colIndex}
+              disabled={currentIndex[0] !== rowIndex}
+              value={col.value.toUpperCase()}
+              onChange={(e) => handleChange(e.target.value, rowIndex, colIndex)}
+              onKeyDown={(e) => handleKeyDown(e.key, rowIndex, colIndex)}
+              ref={
+                rowIndex === currentIndex[0] && colIndex === currentIndex[1]
+                  ? currentRef
+                  : null
+              }
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 }
-
-export default App
