@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import answers from "./data/answers.json";
+import { checkWord, getColor } from "./lib";
 
 const [rows, cols] = [6, 5];
-const colors = ["white", "#f7da21", "#6aaa64"];
 
 export default function App() {
   const [matrix, setMatrix] = useState(
@@ -10,6 +11,8 @@ export default function App() {
     )
   );
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
+  const [filteredList, setFilteredList] = useState<string[]>(answers);
+  console.log(filteredList);
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -17,7 +20,7 @@ export default function App() {
         if (rowIndex !== rowIdx) return row;
         return row.map((col, colIdx) => {
           if (colIndex !== colIdx) return col;
-          return { letter: value.slice(-1), state: col.state };
+          return { letter: value.slice(-1), state: !value ? 0 : col.state };
         });
       });
     });
@@ -32,13 +35,17 @@ export default function App() {
     const hasValue = matrix[rowIndex][colIndex].letter;
     if (key === "Enter") {
       if (hasValue && colIndex === cols - 1) {
+        setFilteredList((prev) =>
+          prev.filter((word) => checkWord(matrix[currentIndex[0]], word))
+        );
         setCurrentIndex(() => [rowIndex + 1, 0]);
       }
     } else if (key === "Backspace") {
       if (hasValue) handleChange("", rowIndex, colIndex);
       else if (colIndex !== 0) handleChange("", rowIndex, colIndex - 1);
     } else {
-      handleChange(key, rowIndex, colIndex);
+      if (key.length === 1 && /[a-z]/i.test(key))
+        handleChange(key, rowIndex, colIndex);
     }
   }
 
@@ -66,20 +73,28 @@ export default function App() {
   });
 
   return (
-    <div>
-      <h1>Wordle Solver</h1>
+    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {matrix.map((row, rowIndex) => (
-        <div key={rowIndex} style={{ display: "flex" }}>
+        <div key={rowIndex} style={{ display: "flex", gap: 2 }}>
           {row.map((col, colIndex) => (
             <div
               key={colIndex}
               onClick={() => col.letter && handleClick(rowIndex, colIndex)}
               style={{
-                width: "20px",
-                height: "20px",
-                border: "1px solid gray",
-                background: colors[col.state],
-                cursor: "pointer",
+                width: 52,
+                height: 52,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontWeight: "bold",
+                border: "2px solid #d3d6da",
+                borderRadius: 2,
+                background: getColor(col.state, rowIndex, currentIndex[0]),
+                color: rowIndex === currentIndex[0] ? "black" : "white",
+                cursor:
+                  col.letter && rowIndex === currentIndex[0]
+                    ? "pointer"
+                    : "initial",
                 userSelect: "none",
               }}
             >
