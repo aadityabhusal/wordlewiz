@@ -1,16 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const [rows, cols] = [6, 5];
-const colors = ["white", "#c9b458", "#6aaa64"];
+const colors = ["white", "#f7da21", "#6aaa64"];
 
 export default function App() {
   const [matrix, setMatrix] = useState(
     [...Array(rows)].map(() =>
-      [...Array(cols)].map(() => ({ value: "", state: 0 }))
+      [...Array(cols)].map(() => ({ letter: "", state: 0 }))
     )
   );
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
-  const currentRef = useRef<HTMLInputElement>(null);
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -18,63 +17,74 @@ export default function App() {
         if (rowIndex !== rowIdx) return row;
         return row.map((col, colIdx) => {
           if (colIndex !== colIdx) return col;
-          return { value: value.slice(0, 1), state: col.state };
+          return { letter: value.slice(-1), state: col.state };
         });
       });
     });
-    setCurrentIndex(() => [rowIndex, colIndex + (value ? 1 : 0)]);
+    setCurrentIndex(() => [
+      rowIndex,
+      colIndex + (value && colIndex < cols - 1 ? 1 : 0),
+    ]);
   }
 
   function handleKeyDown(key: string, rowIndex: number, colIndex: number) {
-    const hasValue = matrix[rowIndex][colIndex].value;
-    if (key === "Enter" && hasValue && colIndex === cols - 1) {
-      setCurrentIndex(() => [rowIndex + 1, 0]);
-    }
-    if (key === "Backspace" && !hasValue) {
-      setCurrentIndex(() => [rowIndex, colIndex - 1]);
+    if (rowIndex === rows) return;
+    const hasValue = matrix[rowIndex][colIndex].letter;
+    if (key === "Enter") {
+      if (hasValue && colIndex === cols - 1) {
+        setCurrentIndex(() => [rowIndex + 1, 0]);
+      }
+    } else if (key === "Backspace") {
+      if (hasValue) handleChange("", rowIndex, colIndex);
+      else if (colIndex !== 0) handleChange("", rowIndex, colIndex - 1);
+    } else {
+      handleChange(key, rowIndex, colIndex);
     }
   }
 
   function handleClick(rowIndex: number, colIndex: number) {
+    if (rowIndex !== currentIndex[0]) return;
     setMatrix((prev) => {
       return prev.map((row, rowIdx) => {
         if (rowIndex !== rowIdx) return row;
         return row.map((col, colIdx) => {
           if (colIndex !== colIdx) return col;
-          return { value: col.value, state: (col.state + 1) % 3 };
+          return { letter: col.letter, state: (col.state + 1) % 3 };
         });
       });
     });
   }
 
   useEffect(() => {
-    currentRef.current?.focus();
-  }, [currentIndex]);
+    function listener(e: KeyboardEvent) {
+      handleKeyDown(e.key, currentIndex[0], currentIndex[1]);
+    }
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  });
 
   return (
-    <div className="App">
-      <h1>Wordle</h1>
+    <div>
+      <h1>Wordle Solver</h1>
       {matrix.map((row, rowIndex) => (
-        <div key={rowIndex}>
+        <div key={rowIndex} style={{ display: "flex" }}>
           {row.map((col, colIndex) => (
-            <input
+            <div
               key={colIndex}
-              disabled={currentIndex[0] !== rowIndex}
-              value={col.value.toUpperCase()}
-              onClick={() => col.value && handleClick(rowIndex, colIndex)}
-              onChange={(e) => handleChange(e.target.value, rowIndex, colIndex)}
-              onKeyDown={(e) => handleKeyDown(e.key, rowIndex, colIndex)}
-              ref={
-                rowIndex === currentIndex[0] && colIndex === currentIndex[1]
-                  ? currentRef
-                  : null
-              }
+              onClick={() => col.letter && handleClick(rowIndex, colIndex)}
               style={{
                 width: "20px",
+                height: "20px",
+                border: "1px solid gray",
                 background: colors[col.state],
-                cursor: col.value ? "pointer" : "initial",
+                cursor: "pointer",
+                userSelect: "none",
               }}
-            />
+            >
+              {col.letter.toUpperCase()}
+            </div>
           ))}
         </div>
       ))}
