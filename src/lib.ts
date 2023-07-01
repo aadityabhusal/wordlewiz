@@ -5,11 +5,15 @@ function checkChar(guess: Guess, index: number, word: string): boolean {
   if (state === 2) return word[index] === letter;
   if (state === 1) return word.includes(letter) && word[index] !== letter;
 
-  const indices = guess
-    .filter((item, idx) => idx !== index && item.letter === letter)
-    .map((_, idx) => idx);
+  const multiple = guess.reduce((prev: number[], item, idx) => {
+    if (idx !== index && item.letter === letter && item.state !== 0)
+      return prev.concat(idx);
+    return prev;
+  }, []);
 
-  if (indices.length) return indices.some((i) => checkChar(guess, i, word));
+  if (multiple.length && word.split(letter).length === multiple.length + 1) {
+    return multiple.some((item) => checkChar(guess, item, word));
+  }
 
   return !word.includes(letter);
 }
