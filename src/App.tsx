@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import answers from "./data/answers.json";
-import { checkWord, getColor } from "./lib";
+import { checkWord, getColor } from "./utils";
 
 const [rows, cols] = [6, 5];
 
@@ -73,36 +73,30 @@ export default function App() {
   });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      {matrix.map((row, rowIndex) => (
-        <div key={rowIndex} style={{ display: "flex", gap: 2 }}>
-          {row.map((col, colIndex) => (
-            <div
-              key={colIndex}
-              onClick={() => col.letter && handleClick(rowIndex, colIndex)}
-              style={{
-                width: 52,
-                height: 52,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontWeight: "bold",
-                border: "2px solid #d3d6da",
-                borderRadius: 2,
-                background: getColor(col.state, rowIndex, currentIndex[0]),
-                color: rowIndex === currentIndex[0] ? "black" : "white",
-                cursor:
-                  col.letter && rowIndex === currentIndex[0]
-                    ? "pointer"
-                    : "initial",
-                userSelect: "none",
-              }}
-            >
-              {col.letter.toUpperCase()}
-            </div>
-          ))}
-        </div>
-      ))}
+    <div id="app">
+      <div id="letterMatrix">
+        {matrix.map((row, rowIndex) => (
+          <div key={rowIndex} className="letterMatrixRow">
+            {row.map((col, colIndex) => (
+              <div
+                key={colIndex}
+                className="matrixLetter"
+                onClick={() => col.letter && handleClick(rowIndex, colIndex)}
+                style={{
+                  background: getColor(col.state, rowIndex, currentIndex[0]),
+                  color: rowIndex === currentIndex[0] ? "black" : "white",
+                  cursor:
+                    col.letter && rowIndex === currentIndex[0]
+                      ? "pointer"
+                      : "initial",
+                }}
+              >
+                {col.letter.toUpperCase()}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
