@@ -12,7 +12,6 @@ export default function App() {
   );
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
-  console.log(filteredList);
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -62,6 +61,19 @@ export default function App() {
     });
   }
 
+  function handleSuggestions(word: string, rowIndex: number) {
+    setMatrix((prev) => {
+      return prev.map((row, rowIdx) => {
+        if (rowIndex !== rowIdx) return row;
+        return word.split("").map((item, i) => ({
+          letter: item,
+          state: prev?.[rowIdx - 1]?.[i]?.state === 2 ? 2 : 0,
+        }));
+      });
+    });
+    setCurrentIndex(() => [rowIndex, cols - 1]);
+  }
+
   useEffect(() => {
     function listener(e: KeyboardEvent) {
       handleKeyDown(e.key, currentIndex[0], currentIndex[1]);
@@ -91,7 +103,22 @@ export default function App() {
                       : "initial",
                 }}
               >
-                {col.letter.toUpperCase()}
+                {col.letter}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div id="suggestions">
+        {filteredList.slice(0, 10).map((item) => (
+          <div
+            key={item}
+            className="suggestion"
+            onClick={() => handleSuggestions(item, currentIndex[0])}
+          >
+            {item.split("").map((letter, i) => (
+              <div key={i} className="matrixLetter">
+                {letter}
               </div>
             ))}
           </div>

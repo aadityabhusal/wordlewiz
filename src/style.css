@@ -31,4 +31,29 @@ body {
   border: 0.125rem solid #d3d6da;
   border-radius: 0.125rem;
   user-select: none;
+  text-transform: uppercase;
+}
+
+#suggestions {
+  flex: 0 0 10rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  overflow-y: auto;
+}
+
+.suggestion {
+  display: flex;
+  gap: 0.125rem;
+  cursor: pointer;
+}
+
+.suggestion:hover > .matrixLetter {
+  background-color: #d3d6da;
+}
+
+.suggestion > .matrixLetter {
+  width: 1.5rem;
+  height: 1.5rem;
 }
