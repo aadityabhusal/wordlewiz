@@ -1,43 +1,78 @@
-import enterIcon from "./enter.svg";
-import deleteIcon from "./delete.svg";
+import enterIcon from "../assets/enter.svg";
+import deleteIcon from "../assets/delete.svg";
+import { getColor } from "../utils";
 
 export function Keyboard({
-  charStatus,
+  letterState,
+  handleClick,
 }: {
-  charStatus: Record<string, number>;
+  letterState: Record<string, number>;
+  handleClick: (letter: string) => void;
 }) {
-  function onClick() {
-    return charStatus;
-  }
   return (
     <div id="keyboard">
       <div className="keyboardRow">
-        {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map((key) => (
-          <div className="keyboardKey" key={key} onClick={onClick}>
-            {key}
-          </div>
+        {["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"].map((key) => (
+          <KeyboardKey
+            key={key}
+            letter={key}
+            state={letterState[key]}
+            handleClick={handleClick}
+          />
         ))}
       </div>
       <div className="keyboardRow">
-        {["A", "S", "D", "F", "G", "H", "J", "K", "L"].map((key) => (
-          <div className="keyboardKey" key={key} onClick={onClick}>
-            {key}
-          </div>
+        {["a", "s", "d", "f", "g", "h", "j", "k", "l"].map((key) => (
+          <KeyboardKey
+            key={key}
+            letter={key}
+            state={letterState[key]}
+            handleClick={handleClick}
+          />
         ))}
       </div>
       <div className="keyboardRow">
-        <div className="keyboardKey" onClick={onClick}>
+        <button className="keyboardKey" onClick={() => handleClick("Enter")}>
           <img src={enterIcon} />
-        </div>
-        {["Z", "X", "C", "V", "B", "N", "M"].map((key) => (
-          <div className="keyboardKey" key={key} onClick={onClick}>
-            {key}
-          </div>
+        </button>
+        {["z", "x", "c", "v", "b", "n", "m"].map((key) => (
+          <KeyboardKey
+            key={key}
+            letter={key}
+            state={letterState[key]}
+            handleClick={handleClick}
+          />
         ))}
-        <div className="keyboardKey" onClick={onClick}>
+        <button
+          className="keyboardKey"
+          onClick={() => handleClick("Backspace")}
+        >
           <img src={deleteIcon} />
-        </div>
+        </button>
       </div>
     </div>
+  );
+}
+
+function KeyboardKey({
+  letter,
+  state,
+  handleClick,
+}: {
+  letter: string;
+  state: number | undefined;
+  handleClick: (letter: string) => void;
+}) {
+  return (
+    <button
+      className={"keyboardKey"}
+      onClick={() => handleClick(letter)}
+      style={{
+        background: state !== undefined ? getColor(state, 0, 1) : "",
+        color: state !== undefined ? "white" : "black",
+      }}
+    >
+      {letter}
+    </button>
   );
 }

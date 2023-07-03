@@ -13,6 +13,7 @@ export default function App() {
   );
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
+  const [letterState, setLetterState] = useState<Record<string, number>>({});
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -38,6 +39,13 @@ export default function App() {
         setFilteredList((prev) =>
           prev.filter((word) => checkWord(matrix[currentIndex[0]], word))
         );
+        setLetterState((prev) => ({
+          ...prev,
+          ...matrix[currentIndex[0]].reduce((prev, item) => {
+            if (letterState[item.letter]) return prev;
+            return { ...prev, [item.letter]: item.state };
+          }, {}),
+        }));
         setCurrentIndex(() => [rowIndex + 1, 0]);
       }
     } else if (key === "Backspace") {
@@ -127,7 +135,12 @@ export default function App() {
           ))}
         </div>
       </div>
-      <Keyboard charStatus={{}} />
+      <Keyboard
+        letterState={letterState}
+        handleClick={(key) =>
+          handleKeyDown(key, currentIndex[0], currentIndex[1])
+        }
+      />
     </div>
   );
 }
