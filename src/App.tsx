@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import answers from "./data/answers.json";
-import { checkWord, getColor } from "./utils";
+import { checkWord, colors, getColor } from "./utils";
 import { Keyboard } from "./components/Keyboard";
 
-const [rows, cols] = [6, 5];
+const [ROWS, COLS] = [6, 5];
 
 export default function App() {
   const [matrix, setMatrix] = useState(
-    [...Array(rows)].map(() =>
-      [...Array(cols)].map(() => ({ letter: "", state: 0 }))
+    [...Array(ROWS)].map(() =>
+      [...Array(COLS)].map(() => ({ letter: "", state: 0 }))
     )
   );
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
@@ -27,15 +27,15 @@ export default function App() {
     });
     setCurrentIndex(() => [
       rowIndex,
-      colIndex + (value && colIndex < cols - 1 ? 1 : 0),
+      colIndex + (value && colIndex < COLS - 1 ? 1 : 0),
     ]);
   }
 
   function handleKeyDown(key: string, rowIndex: number, colIndex: number) {
-    if (rowIndex === rows) return;
+    if (rowIndex === ROWS) return;
     const hasValue = matrix[rowIndex][colIndex].letter;
     if (key === "Enter") {
-      if (hasValue && colIndex === cols - 1) {
+      if (hasValue && colIndex === COLS - 1) {
         setFilteredList((prev) =>
           prev.filter((word) => checkWord(matrix[currentIndex[0]], word))
         );
@@ -80,7 +80,7 @@ export default function App() {
         }));
       });
     });
-    setCurrentIndex(() => [rowIndex, cols - 1]);
+    setCurrentIndex(() => [rowIndex, COLS - 1]);
   }
 
   useEffect(() => {
@@ -95,6 +95,12 @@ export default function App() {
 
   return (
     <div id="app">
+      <div id="header">
+        <h1 id="logo">
+          <span style={{ color: colors[2] }}>Wordle</span>
+          <span style={{ color: colors[1] }}>Wiz</span>
+        </h1>
+      </div>
       <div id="play">
         <div id="letterMatrix">
           {matrix.map((row, rowIndex) => (
