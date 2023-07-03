@@ -31,3 +31,21 @@ export function getColor(state: number, rowIndex: number, currentRow: number) {
     ? colors[state]
     : "white";
 }
+
+export function sortByFrequency(words: string[]) {
+  const list = [...Array(26)].map(() => [0, 0, 0, 0, 0]);
+  words.forEach((word) => {
+    word.split("").forEach((letter, pos) => {
+      const index = Number(letter.codePointAt(0)) - 97;
+      list[index][pos] = list[index][pos] + 1;
+    });
+  });
+  function getSum(word: string) {
+    return word.split("").reduce((prev, letter, pos) => {
+      const index = Number(letter.codePointAt(0)) - 97;
+      return prev + list[index][pos];
+    }, 0);
+  }
+  words.sort((a, b) => getSum(b) - getSum(a));
+  return words;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import answers from "./data/answers.json";
 import { checkWord, getColor } from "./utils";
+import { Keyboard } from "./components/Keyboard";
 
 const [rows, cols] = [6, 5];
 
@@ -86,44 +87,47 @@ export default function App() {
 
   return (
     <div id="app">
-      <div id="letterMatrix">
-        {matrix.map((row, rowIndex) => (
-          <div key={rowIndex} className="letterMatrixRow">
-            {row.map((col, colIndex) => (
-              <div
-                key={colIndex}
-                className="matrixLetter"
-                onClick={() => col.letter && handleClick(rowIndex, colIndex)}
-                style={{
-                  background: getColor(col.state, rowIndex, currentIndex[0]),
-                  color: rowIndex === currentIndex[0] ? "black" : "white",
-                  cursor:
-                    col.letter && rowIndex === currentIndex[0]
-                      ? "pointer"
-                      : "initial",
-                }}
-              >
-                {col.letter}
-              </div>
-            ))}
-          </div>
-        ))}
+      <div id="play">
+        <div id="letterMatrix">
+          {matrix.map((row, rowIndex) => (
+            <div key={rowIndex} className="letterMatrixRow">
+              {row.map((col, colIndex) => (
+                <div
+                  key={colIndex}
+                  className="matrixLetter"
+                  onClick={() => col.letter && handleClick(rowIndex, colIndex)}
+                  style={{
+                    background: getColor(col.state, rowIndex, currentIndex[0]),
+                    color: rowIndex === currentIndex[0] ? "black" : "white",
+                    cursor:
+                      col.letter && rowIndex === currentIndex[0]
+                        ? "pointer"
+                        : "initial",
+                  }}
+                >
+                  {col.letter}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div id="suggestions">
+          {filteredList.slice(0, 10).map((item) => (
+            <div
+              key={item}
+              className="suggestion"
+              onClick={() => handleSuggestions(item, currentIndex[0])}
+            >
+              {item.split("").map((letter, i) => (
+                <div key={i} className="matrixLetter">
+                  {letter}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-      <div id="suggestions">
-        {filteredList.slice(0, 10).map((item) => (
-          <div
-            key={item}
-            className="suggestion"
-            onClick={() => handleSuggestions(item, currentIndex[0])}
-          >
-            {item.split("").map((letter, i) => (
-              <div key={i} className="matrixLetter">
-                {letter}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      <Keyboard charStatus={{}} />
     </div>
   );
 }

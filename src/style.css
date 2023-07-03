@@ -4,10 +4,16 @@ body {
 }
 
 #app {
+  width: min(26rem, 100vw);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#play {
   display: flex;
   gap: 0.5rem;
-  padding: 1rem;
-  overflow: auto;
 }
 
 #letterMatrix {
@@ -39,7 +45,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0 0.25rem;
   overflow-y: auto;
 }
 
@@ -56,4 +61,24 @@ body {
 .suggestion > .matrixLetter {
   width: 1.55rem;
   height: 1.55rem;
+}
+
+.keyboardRow {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.keyboardKey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0.5rem 0;
+  background-color: #d3d6da;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: bold;
 }
