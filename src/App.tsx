@@ -14,6 +14,9 @@ export default function App() {
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
+  const [hideSuggestions, setHideSuggestions] = useState(
+    localStorage.getItem("suggestions") || false
+  );
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -100,9 +103,23 @@ export default function App() {
           <span style={{ color: colors[2] }}>Wordle</span>
           <span style={{ color: colors[1] }}>Wiz</span>
         </h1>
+        <div
+          id="toggleSwitch"
+          style={{ flexDirection: hideSuggestions ? "row" : "row-reverse" }}
+          onClick={() => {
+            localStorage.setItem("suggestions", hideSuggestions ? "" : "show");
+            setHideSuggestions((p) => !p);
+          }}
+        >
+          <div style={{ backgroundColor: colors[hideSuggestions ? 0 : 2] }} />
+          <span>{hideSuggestions ? "Show" : "Hide"}</span>
+        </div>
       </div>
       <div id="play">
-        <div id="letterMatrix">
+        <div
+          id="letterMatrix"
+          style={{ flexBasis: hideSuggestions ? "20rem" : "" }}
+        >
           {matrix.map((row, rowIndex) => (
             <div key={rowIndex} className="letterMatrixRow">
               {row.map((col, colIndex) => (
@@ -111,6 +128,7 @@ export default function App() {
                   className="matrixLetter"
                   onClick={() => col.letter && handleClick(rowIndex, colIndex)}
                   style={{
+                    height: hideSuggestions ? "4rem" : "",
                     background: getColor(col.state, rowIndex, currentIndex[0]),
                     color: rowIndex === currentIndex[0] ? "black" : "white",
                     cursor:
@@ -125,21 +143,23 @@ export default function App() {
             </div>
           ))}
         </div>
-        <div id="suggestions">
-          {filteredList.slice(0, 10).map((item) => (
-            <div
-              key={item}
-              className="suggestion"
-              onClick={() => handleSuggestions(item, currentIndex[0])}
-            >
-              {item.split("").map((letter, i) => (
-                <div key={i} className="matrixLetter">
-                  {letter}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        {!hideSuggestions && (
+          <div id="suggestions">
+            {filteredList.slice(0, 10).map((item) => (
+              <div
+                key={item}
+                className="suggestion"
+                onClick={() => handleSuggestions(item, currentIndex[0])}
+              >
+                {item.split("").map((letter, i) => (
+                  <div key={i} className="matrixLetter">
+                    {letter}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <Keyboard
         letterState={letterState}
