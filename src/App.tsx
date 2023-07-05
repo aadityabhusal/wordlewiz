@@ -4,13 +4,12 @@ import { checkWord, colors, getColor } from "./utils";
 import { Keyboard } from "./components/Keyboard";
 
 const [ROWS, COLS] = [6, 5];
+const DEFAULT_MATRIX = [...Array(ROWS)].map(() =>
+  [...Array(COLS)].map(() => ({ letter: "", state: 0 }))
+);
 
 export default function App() {
-  const [matrix, setMatrix] = useState(
-    [...Array(ROWS)].map(() =>
-      [...Array(COLS)].map(() => ({ letter: "", state: 0 }))
-    )
-  );
+  const [matrix, setMatrix] = useState(DEFAULT_MATRIX);
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
@@ -86,6 +85,13 @@ export default function App() {
     setCurrentIndex(() => [rowIndex, COLS - 1]);
   }
 
+  function reset() {
+    setMatrix(DEFAULT_MATRIX);
+    setLetterState({});
+    setCurrentIndex([0, 0]);
+    setFilteredList(answers);
+  }
+
   useEffect(() => {
     function listener(e: KeyboardEvent) {
       handleKeyDown(e.key, currentIndex[0], currentIndex[1]);
@@ -145,7 +151,7 @@ export default function App() {
         </div>
         {!hideSuggestions && (
           <div id="suggestions">
-            {filteredList.slice(0, 10).map((item) => (
+            {filteredList.slice(0, 9).map((item) => (
               <div
                 key={item}
                 className="suggestion"
@@ -158,6 +164,9 @@ export default function App() {
                 ))}
               </div>
             ))}
+            <button className="button" onClick={reset}>
+              Reset
+            </button>
           </div>
         )}
       </div>

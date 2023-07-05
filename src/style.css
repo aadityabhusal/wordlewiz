@@ -96,6 +96,12 @@ body {
   height: 1.55rem;
 }
 
+.button {
+  border: 1px solid #d3d6da;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+
 #keyboard {
   margin-top: 1rem;
   padding: 0.5rem;
