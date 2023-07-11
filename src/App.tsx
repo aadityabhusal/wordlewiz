@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import words from "./data/words.json";
 import answers from "./data/answers.json";
 import { checkWord, colors, getColor } from "./utils";
 import { Keyboard } from "./components/Keyboard";
@@ -7,12 +8,14 @@ const [ROWS, COLS] = [6, 5];
 const DEFAULT_MATRIX = [...Array(ROWS)].map(() =>
   [...Array(COLS)].map(() => ({ letter: "", state: 0 }))
 );
+const messages = ["Not enough letters", "Not in word list", "Word not found"];
 
 export default function App() {
   const [matrix, setMatrix] = useState(DEFAULT_MATRIX);
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
+  const [message, setMessage] = useState("");
   const [hideSuggestions, setHideSuggestions] = useState(
     localStorage.getItem("suggestions") || false
   );
@@ -38,24 +41,30 @@ export default function App() {
     const hasValue = matrix[rowIndex][colIndex].letter;
     if (key === "Enter") {
       if (hasValue && colIndex === COLS - 1) {
-        setFilteredList((prev) =>
-          prev.filter((word) => checkWord(matrix[currentIndex[0]], word))
+        const currentRow = matrix[currentIndex[0]];
+        if (!words.includes(currentRow.map((i) => i.letter).join(""))) {
+          return setMessage(messages[1]);
+        }
+        const filteredWords = filteredList.filter((word) =>
+          checkWord(currentRow, word)
         );
+        setFilteredList(() => filteredWords);
+        if (!filteredWords.length) setMessage(messages[2]);
         setLetterState((prev) => ({
           ...prev,
-          ...matrix[currentIndex[0]].reduce((prev, item) => {
+          ...currentRow.reduce((prev, item) => {
             if (letterState[item.letter]) return prev;
             return { ...prev, [item.letter]: item.state };
           }, {}),
         }));
         setCurrentIndex(() => [rowIndex + 1, 0]);
-      }
+      } else setMessage(messages[0]);
     } else if (key === "Backspace") {
       if (hasValue) handleChange("", rowIndex, colIndex);
       else if (colIndex !== 0) handleChange("", rowIndex, colIndex - 1);
     } else {
       if (key.length === 1 && /[a-z]/i.test(key))
-        handleChange(key, rowIndex, colIndex);
+        handleChange(key.toLowerCase(), rowIndex, colIndex);
     }
   }
 
@@ -101,6 +110,12 @@ export default function App() {
       document.removeEventListener("keydown", listener);
     };
   });
+
+  useEffect(() => {
+    if (!message) return;
+    const timeout = setTimeout(() => setMessage(""), 1000);
+    return () => clearTimeout(timeout);
+  }, [message]);
 
   return (
     <div id="app">
@@ -169,6 +184,7 @@ export default function App() {
             </button>
           </div>
         )}
+        {message && <div id="message">{message}</div>}
       </div>
       <Keyboard
         letterState={letterState}

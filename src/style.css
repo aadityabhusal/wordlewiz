@@ -46,6 +46,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0 0.5rem;
+  position: relative;
 }
 
 #letterMatrix {
@@ -100,6 +101,14 @@ body {
   border: 1px solid #d3d6da;
   cursor: pointer;
   padding: 0.25rem 0;
+}
+
+#message {
+  position: absolute;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  background-color: #d3d6da;
+  top: calc(50% - 2rem);
 }
 
 #keyboard {
