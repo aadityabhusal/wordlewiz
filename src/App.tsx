@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import words from "./data/words.json";
 import answers from "./data/answers.json";
-import { checkWord, colors, getColor } from "./utils";
+import { checkWord, colors, getColor, sortWords } from "./utils";
 import { Keyboard } from "./components/Keyboard";
 
 const [ROWS, COLS] = [6, 5];
@@ -48,7 +48,7 @@ export default function App() {
         const filteredWords = filteredList.filter((word) =>
           checkWord(currentRow, word)
         );
-        setFilteredList(() => filteredWords);
+        setFilteredList(() => sortWords([...filteredWords]));
         if (!filteredWords.length) setMessage(messages[2]);
         setLetterState((prev) => ({
           ...prev,

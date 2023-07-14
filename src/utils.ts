@@ -1,3 +1,5 @@
+import letters from "./data/letters.json";
+
 type Guess = { letter: string; state: number }[];
 
 function checkChar(guess: Guess, index: number, word: string): boolean {
@@ -32,7 +34,7 @@ export function getColor(state: number, rowIndex: number, currentRow: number) {
     : "white";
 }
 
-export function sortByFrequency(words: string[]) {
+export function sortWords(words: string[]) {
   const list = [...Array(26)].map(() => [0, 0, 0, 0, 0]);
   words.forEach((word) => {
     word.split("").forEach((letter, pos) => {
@@ -41,10 +43,11 @@ export function sortByFrequency(words: string[]) {
     });
   });
   function getSum(word: string) {
-    return word.split("").reduce((prev, letter, pos) => {
+    const sum = word.split("").reduce((prev, letter, pos) => {
       const index = Number(letter.codePointAt(0)) - 97;
-      return prev + list[index][pos];
+      return prev + list[index][pos] + letters.indexOf(letter);
     }, 0);
+    return sum * new Set(word).size;
   }
   words.sort((a, b) => getSum(b) - getSum(a));
   return words;
