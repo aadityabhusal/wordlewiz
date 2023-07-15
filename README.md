@@ -1,25 +1,21 @@
-# wordle
-An approach to solving wordle puzzles
+# WordleWiz
+WordleWiz provides a list of best words for your next Wordle guess.
 
-# This project is being modified into a wordle solver.
+## How to use
+- Click on a suggested word to select or type the word out with keyboard (or click on the bottom keyboard letters)
+- Then click on the guess letter
+  - Once to turn it yellow (answer contains the word)
+  - Twice to turn it green (answer contains the word at exact same position)
+  - Thrice to turn it white (answer doesn't contain the word)
+  - Hit enter to get the list of suggestion for the next guess
+- You can click on the switch to hide the suggestions
 
-# Tasks
-- Get the list of most used letters in 5 lettered words
-- Optimize the function from O(n^2) to O(n*log(n)) or if possible O(n)
-- Make the function more generic to make it possible to add reserved/fixed words
+
+## Screenshots
+![Screenshot](./public/screenshot.png)
 
 # Links
 - [Optimal Wordle solutions using decision trees (+GitHub)](https://jonathanolson.net/experiments/optimal-wordle-solutions)
 - [The best strategies for Wordle (Wiki)](http://sonorouschocolate.com/notes/index.php?title=The_best_strategies_for_Wordle)
-- [Wikipedia letter frequency (Wiki)](https://en.wikipedia.org/wiki/Letter_frequency)
 - [Letter frequency and Wordle](https://recoveringphysicist.com/39/letter-frequency-and-wordle)
-- [5 lettered words dataset](https://www-cs-faculty.stanford.edu/~knuth/sgb.html)
 - [Most used letters morse code](https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html)
-
-# Findings
-
-2 Words - (aurei/irate), clods & adieu, snort
-
-3 Words - atone, child, rumps & ariel, dunts, chomp (opt. fourth gawky/beigy)
-
-4 Words - trial, befog, chump, wynds
