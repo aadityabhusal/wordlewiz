@@ -124,7 +124,8 @@ export default function App() {
           <span style={{ color: colors[2] }}>Wordle</span>
           <span style={{ color: colors[1] }}>Wiz</span>
         </h1>
-        <div
+        {/* The toggle switch will be hidden until a "normal game node" is not ready */}
+        {/* <div
           id="toggleSwitch"
           style={{ flexDirection: hideSuggestions ? "row" : "row-reverse" }}
           onClick={() => {
@@ -134,7 +135,7 @@ export default function App() {
         >
           <div style={{ backgroundColor: colors[hideSuggestions ? 0 : 2] }} />
           <span>{hideSuggestions ? "Show" : "Hide"}</span>
-        </div>
+        </div> */}
       </div>
       <div id="play">
         <div
