@@ -16,7 +16,7 @@ export default function App() {
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
-  const [hideSuggestions, setHideSuggestions] = useState(
+  const [hideSuggestions] = useState(
     localStorage.getItem("suggestions") || false
   );
 
