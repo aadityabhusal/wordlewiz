@@ -10,7 +10,7 @@ export function Keyboard({
   handleClick: (letter: string) => void;
 }) {
   return (
-    <div id="keyboard">
+    <div className="mt-4 p-2">
       <div className="keyboardRow">
         {["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"].map((key) => (
           <KeyboardKey
@@ -65,7 +65,7 @@ function KeyboardKey({
 }) {
   return (
     <button
-      className={"keyboardKey"}
+      className="keyboardKey"
       onClick={() => handleClick(letter)}
       style={{
         background: state !== undefined ? getColor(state, 0, 1) : "",

@@ -118,36 +118,39 @@ export default function App() {
   }, [message]);
 
   return (
-    <div id="app">
-      <div id="header">
-        <h1 id="logo">
+    <div className="flex flex-col justify-center my-0 mx-auto max-w-[26rem] w-screen">
+      <div className="border-b border-solid border-[#d3d6da] mb-4 py-1 px-2 flex justify-between items-center">
+        <h1 className="m-0">
           <span style={{ color: colors[2] }}>Wordle</span>
           <span style={{ color: colors[1] }}>Wiz</span>
         </h1>
         {/* The toggle switch will be hidden until a "normal game node" is not ready */}
         {/* <div
-          id="toggleSwitch"
+          className="border border-solid border-[#d3d6da] flex items-center cursor-pointer rounded-xl p-1 gap-1"
           style={{ flexDirection: hideSuggestions ? "row" : "row-reverse" }}
           onClick={() => {
             localStorage.setItem("suggestions", hideSuggestions ? "" : "show");
             setHideSuggestions((p) => !p);
           }}
         >
-          <div style={{ backgroundColor: colors[hideSuggestions ? 0 : 2] }} />
+          <div
+            style={{ backgroundColor: colors[hideSuggestions ? 0 : 2] }}
+            className="w-[1.1rem] h-[1.1rem] rounded-full bg-[red]"
+          />
           <span>{hideSuggestions ? "Show" : "Hide"}</span>
         </div> */}
       </div>
-      <div id="play">
+      <div className="flex justify-center gap-2 px-2 relative">
         <div
-          id="letterMatrix"
+          className="flex flex-col gap-[0.125rem] flex-[0_1_16rem]"
           style={{ flexBasis: hideSuggestions ? "20rem" : "" }}
         >
           {matrix.map((row, rowIndex) => (
-            <div key={rowIndex} className="letterMatrixRow">
+            <div key={rowIndex} className="flex gap-[0.125rem]">
               {row.map((col, colIndex) => (
                 <div
                   key={colIndex}
-                  className="matrixLetter"
+                  className="flex-[1_1_3rem] h-12 flex justify-center items-center font-bold border-2 border-solid border-[#d3d6da] rounded-sm select-none uppercase"
                   onClick={() => col.letter && handleClick(rowIndex, colIndex)}
                   style={{
                     height: hideSuggestions ? "4rem" : "",
@@ -166,26 +169,39 @@ export default function App() {
           ))}
         </div>
         {!hideSuggestions && (
-          <div id="suggestions">
+          <div className="flex-[0_1_9rem] flex flex-col gap-1 overflow-y-auto">
             {filteredList.slice(0, 9).map((item) => (
               <div
                 key={item}
-                className="suggestion"
+                className="group flex gap-[0.125rem] cursor-pointer"
                 onClick={() => handleSuggestions(item, currentIndex[0])}
               >
                 {item.split("").map((letter, i) => (
-                  <div key={i} className="matrixLetter">
+                  <div
+                    key={i}
+                    className="flex-[0_1_1.55rem] h-[1.55rem] flex justify-center items-center font-bold border-2 border-solid border-[#d3d6da] rounded-sm select-none uppercase group-hover:bg-[#d3d6da]"
+                  >
                     {letter}
                   </div>
                 ))}
               </div>
             ))}
-            <button className="button" onClick={reset}>
+            <button
+              className="h-9 border border-solid border-[#d3d6da]"
+              onClick={reset}
+            >
               Reset
             </button>
           </div>
         )}
-        {message && <div id="message">{message}</div>}
+        {message && (
+          <div
+            className="absolute p-4 rounded bg-[#d3d6da]"
+            style={{ top: "calc(50% - 2rem)" }}
+          >
+            {message}
+          </div>
+        )}
       </div>
       <Keyboard
         letterState={letterState}

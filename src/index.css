@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.keyboardRow {
+  @apply flex justify-center flex-1 gap-1 mt-1;
+}
+
+.keyboardKey {
+  @apply flex justify-center items-center flex-1 py-4 bg-[#d3d6da] rounded cursor-pointer font-bold border-none uppercase;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  #app {
+    min-height: 100vh;
+  }
+  #keyboard {
+    margin-top: auto;
+  }
+}
