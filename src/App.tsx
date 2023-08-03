@@ -16,9 +16,7 @@ export default function App() {
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
-  const [hideSuggestions] = useState(
-    localStorage.getItem("suggestions") || false
-  );
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "solve");
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -101,6 +99,12 @@ export default function App() {
     setFilteredList(answers);
   }
 
+  function toggleMode() {
+    const newMode = mode === "play" ? "game" : "play";
+    setMode(newMode);
+    localStorage.setItem("mode", newMode);
+  }
+
   useEffect(() => {
     function listener(e: KeyboardEvent) {
       handleKeyDown(e.key, currentIndex[0], currentIndex[1]);
@@ -124,26 +128,25 @@ export default function App() {
           <span style={{ color: colors[2] }}>Wordle</span>
           <span style={{ color: colors[1] }}>Wiz</span>
         </h1>
-        {/* The toggle switch will be hidden until a "normal game node" is not ready */}
-        {/* <div
-          className="border border-solid border-[#d3d6da] flex items-center cursor-pointer rounded-xl p-1 gap-1"
-          style={{ flexDirection: hideSuggestions ? "row" : "row-reverse" }}
+        <div
+          className="border border-solid border-[#d3d6da] flex items-center cursor-pointer rounded-xl p-1 gap-2"
+          style={{ flexDirection: mode === "play" ? "row" : "row-reverse" }}
           onClick={() => {
-            localStorage.setItem("suggestions", hideSuggestions ? "" : "show");
-            setHideSuggestions((p) => !p);
+            toggleMode();
+            reset();
           }}
         >
           <div
-            style={{ backgroundColor: colors[hideSuggestions ? 0 : 2] }}
+            style={{ backgroundColor: colors[mode === "play" ? 1 : 2] }}
             className="w-[1.1rem] h-[1.1rem] rounded-full bg-[red]"
           />
-          <span>{hideSuggestions ? "Show" : "Hide"}</span>
-        </div> */}
+          <span>{mode === "play" ? "Play" : "Solve"}</span>
+        </div>
       </div>
       <div className="flex justify-center gap-2 px-2 relative">
         <div
           className="flex flex-col gap-[0.125rem] flex-[0_1_16rem]"
-          style={{ flexBasis: hideSuggestions ? "20rem" : "" }}
+          style={{ flexBasis: mode === "play" ? "20rem" : "" }}
         >
           {matrix.map((row, rowIndex) => (
             <div key={rowIndex} className="flex gap-[0.125rem]">
@@ -153,7 +156,7 @@ export default function App() {
                   className="flex-[1_1_3rem] h-12 flex justify-center items-center font-bold border-2 border-solid border-[#d3d6da] rounded-sm select-none uppercase"
                   onClick={() => col.letter && handleClick(rowIndex, colIndex)}
                   style={{
-                    height: hideSuggestions ? "4rem" : "",
+                    height: mode === "play" ? "4rem" : "",
                     background: getColor(col.state, rowIndex, currentIndex[0]),
                     color: rowIndex === currentIndex[0] ? "black" : "white",
                     cursor:
@@ -168,7 +171,7 @@ export default function App() {
             </div>
           ))}
         </div>
-        {!hideSuggestions && (
+        {mode !== "play" && (
           <div className="flex-[0_1_9rem] flex flex-col gap-1 overflow-y-auto">
             {filteredList.slice(0, 9).map((item) => (
               <div
