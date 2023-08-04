@@ -17,6 +17,11 @@ export default function App() {
   const [letterState, setLetterState] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
   const [mode, setMode] = useState(localStorage.getItem("mode") || "solve");
+  const [targetWord, setTargetWord] = useState(getRandomWord());
+
+  function getRandomWord() {
+    return answers[Math.floor(Math.random() * answers.length)];
+  }
 
   function handleChange(value: string, rowIndex: number, colIndex: number) {
     setMatrix((prev) => {
@@ -43,18 +48,23 @@ export default function App() {
         if (!words.includes(currentRow.map((i) => i.letter).join(""))) {
           return setMessage(messages[1]);
         }
-        const filteredWords = filteredList.filter((word) =>
-          checkWord(currentRow, word)
-        );
-        setFilteredList(() => sortWords([...filteredWords]));
-        if (!filteredWords.length) setMessage(messages[2]);
-        setLetterState((prev) => ({
-          ...prev,
-          ...currentRow.reduce((prev, item) => {
-            if (letterState[item.letter]) return prev;
-            return { ...prev, [item.letter]: item.state };
-          }, {}),
-        }));
+        if (mode === "solve") {
+          const filteredWords = filteredList.filter((word) =>
+            checkWord(currentRow, word)
+          );
+          setFilteredList(() => sortWords([...filteredWords]));
+          if (!filteredWords.length) setMessage(messages[2]);
+          setLetterState((prev) => ({
+            ...prev,
+            ...currentRow.reduce((prev, item) => {
+              if (letterState[item.letter]) return prev;
+              return { ...prev, [item.letter]: item.state };
+            }, {}),
+          }));
+        } else {
+          /* Handle play mode logic here */
+        }
+
         setCurrentIndex(() => [rowIndex + 1, 0]);
       } else setMessage(messages[0]);
     } else if (key === "Backspace") {
@@ -100,7 +110,10 @@ export default function App() {
   }
 
   function toggleMode() {
-    const newMode = mode === "play" ? "game" : "play";
+    const newMode = mode === "play" ? "solve" : "play";
+    if (newMode === "play") {
+      setTargetWord(getRandomWord());
+    }
     setMode(newMode);
     localStorage.setItem("mode", newMode);
   }
@@ -154,13 +167,19 @@ export default function App() {
                 <div
                   key={colIndex}
                   className="flex-[1_1_3rem] h-12 flex justify-center items-center font-bold border-2 border-solid border-[#d3d6da] rounded-sm select-none uppercase"
-                  onClick={() => col.letter && handleClick(rowIndex, colIndex)}
+                  onClick={() =>
+                    col.letter &&
+                    mode === "solve" &&
+                    handleClick(rowIndex, colIndex)
+                  }
                   style={{
                     height: mode === "play" ? "4rem" : "",
                     background: getColor(col.state, rowIndex, currentIndex[0]),
                     color: rowIndex === currentIndex[0] ? "black" : "white",
                     cursor:
-                      col.letter && rowIndex === currentIndex[0]
+                      col.letter &&
+                      mode === "solve" &&
+                      rowIndex === currentIndex[0]
                         ? "pointer"
                         : "initial",
                   }}
