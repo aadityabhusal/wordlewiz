@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import words from "./data/words.json";
 import answers from "./data/answers.json";
-import { checkWord, colors, getColor, sortWords } from "./utils";
+import {
+  checkWord,
+  colors,
+  getColor,
+  getLetterState,
+  sortWords,
+} from "./utils";
 import { Keyboard } from "./components/Keyboard";
 
 const [ROWS, COLS] = [6, 5];
@@ -62,9 +68,25 @@ export default function App() {
             }, {}),
           }));
         } else {
-          /* Handle play mode logic here */
+          setMatrix((prev) => {
+            return prev.map((row, rowIdx) => {
+              if (rowIndex !== rowIdx) return row;
+              return row.map((col, colIdx) => ({
+                ...col,
+                state: getLetterState(targetWord, col.letter, colIdx),
+              }));
+            });
+          });
+          setLetterState((prev) => ({
+            ...prev,
+            ...currentRow.reduce((prev, item, index) => {
+              return {
+                ...prev,
+                [item.letter]: getLetterState(targetWord, item.letter, index),
+              };
+            }, {}),
+          }));
         }
-
         setCurrentIndex(() => [rowIndex + 1, 0]);
       } else setMessage(messages[0]);
     } else if (key === "Backspace") {
