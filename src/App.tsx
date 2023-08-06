@@ -14,7 +14,12 @@ const [ROWS, COLS] = [6, 5];
 const DEFAULT_MATRIX = [...Array(ROWS)].map(() =>
   [...Array(COLS)].map(() => ({ letter: "", state: 0 }))
 );
-const messages = ["Not enough letters", "Not in word list", "Word not found"];
+const messages = [
+  "Not enough letters",
+  "Not in word list",
+  "Word not found",
+  "Correct guess!",
+];
 
 export default function App() {
   const [matrix, setMatrix] = useState(DEFAULT_MATRIX);
@@ -48,7 +53,8 @@ export default function App() {
   function handleKeyDown(key: string, rowIndex: number, colIndex: number) {
     if (rowIndex === ROWS) return;
     const hasValue = matrix[rowIndex][colIndex].letter;
-    if (key === "Enter") {
+    if (matrix[currentIndex[0] - 1]?.every((g) => g.state === 2)) reset();
+    else if (key === "Enter") {
       if (hasValue && colIndex === COLS - 1) {
         const currentRow = matrix[currentIndex[0]];
         if (!words.includes(currentRow.map((i) => i.letter).join(""))) {
@@ -86,6 +92,8 @@ export default function App() {
               };
             }, {}),
           }));
+          if (currentRow.every((g, i) => g.letter === targetWord[i]))
+            setMessage(messages[3]);
         }
         setCurrentIndex(() => [rowIndex + 1, 0]);
       } else setMessage(messages[0]);
@@ -129,6 +137,7 @@ export default function App() {
     setLetterState({});
     setCurrentIndex([0, 0]);
     setFilteredList(answers);
+    setTargetWord(getRandomWord());
   }
 
   function toggleMode() {
