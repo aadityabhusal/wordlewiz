@@ -52,3 +52,11 @@ export function sortWords(words: string[]) {
   words.sort((a, b) => getSum(b) - getSum(a));
   return words;
 }
+
+export function getLetterState(
+  targetWord: string,
+  letter: string,
+  index: number
+) {
+  return letter === targetWord[index] ? 2 : targetWord.includes(letter) ? 1 : 0;
+}
