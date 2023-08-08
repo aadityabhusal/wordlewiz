@@ -10,7 +10,7 @@ export function Keyboard({
   handleClick: (letter: string) => void;
 }) {
   return (
-    <div className="mt-4 p-2">
+    <div id="keyboard" className="mt-4 p-2">
       <div className="keyboardRow">
         {["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"].map((key) => (
           <KeyboardKey

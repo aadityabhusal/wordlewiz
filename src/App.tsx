@@ -118,7 +118,10 @@ export default function App() {
   }, [message]);
 
   return (
-    <div className="flex flex-col justify-center my-0 mx-auto max-w-[26rem] w-screen">
+    <div
+      id="app"
+      className="flex flex-col justify-center my-0 mx-auto max-w-[26rem] w-screen"
+    >
       <div className="border-b border-solid border-[#d3d6da] mb-4 py-1 px-2 flex justify-between items-center">
         <h1 className="m-0">
           <span style={{ color: colors[2] }}>Wordle</span>
