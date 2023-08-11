@@ -24,6 +24,7 @@ const messages = [
 export default function App() {
   const [matrix, setMatrix] = useState(DEFAULT_MATRIX);
   const [currentIndex, setCurrentIndex] = useState([0, 0]);
+  const [animateIndex, setAnimateIndex] = useState([-1, -1]);
   const [filteredList, setFilteredList] = useState<string[]>(answers);
   const [letterState, setLetterState] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
@@ -44,6 +45,7 @@ export default function App() {
         });
       });
     });
+    setAnimateIndex(value ? [rowIndex, colIndex] : [-1, -1]);
     setCurrentIndex(() => [
       rowIndex,
       colIndex + (value && colIndex < COLS - 1 ? 1 : 0),
@@ -200,7 +202,11 @@ export default function App() {
               {row.map((col, colIndex) => (
                 <div
                   key={colIndex}
-                  className="flex-[1_1_3rem] h-12 flex justify-center items-center font-bold border-2 border-solid border-[#d3d6da] rounded-sm select-none uppercase"
+                  className={`flex-[1_1_3rem] h-12 flex justify-center items-center font-bold border-2 border-solid rounded-sm select-none uppercase ${
+                    rowIndex === animateIndex[0] && colIndex === animateIndex[1]
+                      ? "animate-[bounce_0.2s_ease-in-out_forwards]"
+                      : ""
+                  }`}
                   onClick={() =>
                     col.letter &&
                     mode === "solve" &&
@@ -210,6 +216,10 @@ export default function App() {
                     height: mode === "play" ? "4rem" : "",
                     background: getColor(col.state, rowIndex, currentIndex[0]),
                     color: rowIndex === currentIndex[0] ? "black" : "white",
+                    borderColor:
+                      rowIndex === currentIndex[0] && col.letter
+                        ? colors[0]
+                        : "#d3d6da",
                     cursor:
                       col.letter &&
                       mode === "solve" &&
