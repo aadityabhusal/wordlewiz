@@ -1,15 +1,18 @@
 # WordleWiz
-WordleWiz provides a list of best words for your next Wordle guess.
+WordleWiz provides a list of best words for your next Wordle guess. You can choose the 'Play' to play a game of Wordle too.
 
 ![UI Screenshot](./public/screenshot.png)
 
 ## How to use
-- Click on a suggested word to select or type the word out with keyboard (or click on the bottom keyboard letters)
-- Then, click on the guessed letters:
-  - Once, to turn it yellow (answer contains the letter)
-  - Twice, to turn it green (answer contains the letter at the same position)
-- Hit enter to get the list of suggestion for the next guess
-- You can click on the switch to hide the suggestions
+- Choose the 'Solve' mode from the top right of the page. A list of suggestions appears in the right panel.
+- Click on a suggested word to select or type the word out or click on the virtual keyboard keys.
+- Then, click on the letters of the word you guessed:
+  - Click once, to turn it yellow (answer contains the letter)
+  - Click twice, to turn it green (answer contains the letter at the same position)
+  - Click thrice, to turn it into white (answer doesn't contain the letter)
+- Hit enter to get a new list of suggestion for the next guess based on your choices.
+- Click on the 'Reset' button to reset your guesses.
+- Choose the 'Play' to play a normal game of Wordle.
 
 ## Results
 
