@@ -19,6 +19,7 @@ const messages = [
   "Not in word list",
   "Word not found",
   "Correct guess!",
+  "You lost!",
 ];
 
 export default function App() {
@@ -53,16 +54,19 @@ export default function App() {
   }
 
   function handleKeyDown(key: string, rowIndex: number, colIndex: number) {
-    if (rowIndex === ROWS) return;
+    if (rowIndex === ROWS) return reset();
     const hasValue = matrix[rowIndex][colIndex].letter;
-    if (matrix[currentIndex[0] - 1]?.every((g) => g.state === 2)) reset();
+    const rightGuess = matrix[currentIndex[0] - 1]?.every((g) => g.state === 2);
+    if (rightGuess) reset();
     else if (key === "Enter") {
       if (hasValue && colIndex === COLS - 1) {
         const currentRow = matrix[currentIndex[0]];
         if (!words.includes(currentRow.map((i) => i.letter).join(""))) {
           return setMessage(messages[1]);
         }
-        if (mode === "solve") {
+        if (rowIndex === ROWS - 1 && !rightGuess) {
+          setMessage(messages[4]);
+        } else if (mode === "solve") {
           const filteredWords = filteredList.filter((word) =>
             checkWord(currentRow, word)
           );
