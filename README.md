@@ -1,7 +1,7 @@
 # WordleWiz
 WordleWiz provides a list of best words for your next Wordle guess. You can choose the 'Play' to play a game of Wordle too.
 
-![UI Screenshot](./public/screenshot.png)
+![Demo](./public/demo.gif)
 
 ## How to use
 - Choose the 'Solve' mode from the top right of the page. A list of suggestions appears in the right panel.
