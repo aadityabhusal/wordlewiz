@@ -9,6 +9,7 @@ import {
   sortWords,
 } from "./utils";
 import { Keyboard } from "./components/Keyboard";
+import githubLogo from "./assets/github.svg";
 
 const [ROWS, COLS] = [6, 5];
 const DEFAULT_MATRIX = [...Array(ROWS)].map(() =>
@@ -181,6 +182,14 @@ export default function App() {
           <span style={{ color: colors[2] }}>Wordle</span>
           <span style={{ color: colors[1] }}>Wiz</span>
         </h1>
+        <a
+          className="ml-auto mr-3"
+          href="https://github.com/aadityabhusal/wordlewiz"
+          target="_blank"
+          title="Source code"
+        >
+          <img src={githubLogo} width={24} height={24} alt="GitHub" />
+        </a>
         <div
           className="border border-solid border-[#d3d6da] flex items-center cursor-pointer rounded-xl p-1 gap-2"
           style={{ flexDirection: mode === "play" ? "row" : "row-reverse" }}
